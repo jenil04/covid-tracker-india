@@ -74,23 +74,23 @@ for i in range(len(district_names)):
     district_cases_dictionary[district_names[i] + state_names[i]] = []
 
 # Open CSV file dataset for districts in India.
-with open('india-districts.csv', newline='') as csvfile:
+with open('complete.csv', newline='') as csvfile:
     reader = csv.reader(csvfile, delimiter='\n', quotechar='|')
     for row in reader:
         row_data = row[0].split(',')
         date = row_data[0]
-        county = row_data[1]
+        district = row_data[1]
         if (len(row_data) > 2):
             state = row_data[2]
         for i in range(len(county_names)):
-            if (county == county_names[i] and state == state_names[i]):
-                county_dates_dict.setdefault((county + state), []).append(row_data[0])
-                county_cases_dict.setdefault((county + state), []).append(int(row_data[4]))
+            if (district == district_names[i] and state == state_names[i]):
+                district_dates_dict.setdefault((district + state), []).append(row_data[0])
+                district_cases_dict.setdefault((district + state), []).append(int(row_data[4]))
 
 earliest_date = Date(32, 13, 3000)
 latest_date = Date(0, 0, 0)
 
-for i in range(len(county_names)):
+for i in range(len(district_names)):
     district = district_names[i]
     state = state_names[i]
     dates = district_dates_dictionary[district + state]
@@ -111,7 +111,7 @@ for i in range(len(county_names)):
 day_count, day_mapping = DaysBetween(earliest_date, latest_date)
 fig, ax = plt.subplots()
 
-for i in range(len(county_names)):
+for i in range(len(district_names)):
     district = district_names[i]
     state = state_names[i]
     dates = district_dates_dictionary[district + state]
