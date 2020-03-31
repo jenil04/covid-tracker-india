@@ -7,6 +7,9 @@ Track COVID cases in India per state.
 
 ## Output
 
+<p align="center">
+  <img src="https://github.com/jenil04/covid-tracker-india/blob/master/output-graphs/sample_output.png">
+</p>
 
 ## Dataset 
 - This dataset is taken from [here](https://www.kaggle.com/imdevskp/covid19-corona-virus-india-dataset/data), as seen on Kaggle.
