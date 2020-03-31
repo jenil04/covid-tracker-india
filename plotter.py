@@ -46,14 +46,12 @@ def DaysBetween(first, second):
             first.day += 1
     return day_count, day_mapping
 
-district_names = np.array([])
 state_names = np.array([])
-while (True):
-    district_name = input("Enter district in your state: ")
-    district_names = np.append(district_names, district_name)
-    state_name = input("Enter the state you want data from: ")
-    state_names = np.append(state_names, state_name)
 
+while (True):
+    state_name = input("Enter the name of state / UT: ")
+    state_names = np.append(state_names, state_name)
+    
     # Revert back to a different region.
     another = input("Enter another? (y/n) or delete previous entry (d): ")
     if (another == "D" or another == "d"):
@@ -61,39 +59,35 @@ while (True):
     elif (another == "n" or another == "N"):
         break
 
-district_name = district_names[0]
 state_name = state_names[0]
 
-district_set = np.array([])
-deaths = np.array([])
+state_set = np.array([])
+confirmed_cases = np.array([])
 
-district_cases_dictionary = {}
-district_dates_dictionary = {}
+state_cases_dictionary = {}
+state_dates_dictionary = {}
 
-for i in range(len(district_names)):
-    district_cases_dictionary[district_names[i] + state_names[i]] = []
+for i in range(len(state_names)):
+    state_cases_dictionary[state_names[i]] = []
 
-# Open CSV file dataset for districts in India.
+# Open CSV file dataset for states in India.
 with open('complete.csv', newline='') as csvfile:
     reader = csv.reader(csvfile, delimiter='\n', quotechar='|')
     for row in reader:
         row_data = row[0].split(',')
         date = row_data[0]
-        district = row_data[1]
-        if (len(row_data) > 2):
-            state = row_data[2]
-        for i in range(len(county_names)):
-            if (district == district_names[i] and state == state_names[i]):
-                district_dates_dict.setdefault((district + state), []).append(row_data[0])
-                district_cases_dict.setdefault((district + state), []).append(int(row_data[4]))
+        state = row_data[1]
+        for i in range(len(state_names)):
+            if (state == state_names[i]):
+                state_dates_dictionary.setdefault((state), []).append(row_data[0])
+                state_cases_dictionary.setdefault((state), []).append(int(row_data[4]))
 
 earliest_date = Date(32, 13, 3000)
 latest_date = Date(0, 0, 0)
 
-for i in range(len(district_names)):
-    district = district_names[i]
+for i in range(len(state_names)):
     state = state_names[i]
-    dates = district_dates_dictionary[district + state]
+    dates = state_dates_dictionary[state]
     for j in range(len(dates)):
         date = dates[j]
         date = date.split('-')
@@ -111,11 +105,10 @@ for i in range(len(district_names)):
 day_count, day_mapping = DaysBetween(earliest_date, latest_date)
 fig, ax = plt.subplots()
 
-for i in range(len(district_names)):
-    district = district_names[i]
+for i in range(len(state_names)):
     state = state_names[i]
-    dates = district_dates_dictionary[district + state]
-    cases = district_cases_dictionary[district + state]
+    dates = state_dates_dictionary[state]
+    cases = state_cases_dictionary[state]
     cases = np.array(cases)
     dates = np.array(dates)
     first_day = int(day_mapping[dates[0]])
@@ -131,12 +124,12 @@ for i in range(len(district_names)):
     model.fit(x_poly, new_cases)
     y_poly_pred = model.predict(x_poly)
 
-    plt.scatter(y_pos, cases, s=10)
-    plt.plot(x, y_poly_pred, label=(district + ', ' + state))
+    #plt.scatter(y_pos, cases, s=10)
+    plt.plot(x, y_poly_pred, label=(state))
     plt.ylabel('Cases')
 all_dates = list(day_mapping.keys())
 plt.xticks(np.arange(day_count), all_dates, rotation=45)
 ncols = 2
 ax.legend(ncol=ncols, loc='best')
-plt.title("Total COVID-19 Cases Per District")
+plt.title("Total COVID-19 Cases Per State")
 plt.show()
