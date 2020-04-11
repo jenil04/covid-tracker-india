@@ -16,6 +16,7 @@ Track COVID cases in India per state.
 
 ## To-do
 - Web-app for users to interact and update real-time data.
+- Map cases by district.
 
 ## Author
 [Jenil Thakker](https://github.com/jenil04)
